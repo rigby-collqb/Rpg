@@ -5,6 +5,10 @@ const inventoryEl = document.getElementById("inventory");
 const bgSound = document.getElementById("bg-sound");
 const jumpscare = document.getElementById("jumpscare");
 const scream = document.getElementById("scream");
+const typingSound = document.getElementById("typing-sound");
+const credits = document.getElementById("credits");
+const creditLine = document.getElementById("credit-line");
+const endSound = document.getElementById("end-sound");
 
 let sanity = 100;
 let inventory = [];
@@ -15,10 +19,18 @@ function updateStatus() {
 }
 
 function typeText(text, callback, i = 0) {
+  if (i === 0) {
+    typingSound.currentTime = 0;
+    typingSound.loop = true;
+    typingSound.play().catch(() => {});
+  }
+
   if (i < text.length) {
     textEl.innerHTML += text.charAt(i);
     setTimeout(() => typeText(text, callback, i + 1), 40);
   } else {
+    typingSound.pause();
+    typingSound.currentTime = 0;
     callback();
   }
 }
@@ -47,6 +59,7 @@ function showScene(scene) {
   }
 
   updateStatus();
+
   typeText(scene.text, () => {
     if (scene.choices) {
       scene.choices.forEach(choice => {
@@ -55,8 +68,42 @@ function showScene(scene) {
         btn.onclick = () => showScene(scenes[choice.next]);
         choicesEl.appendChild(btn);
       });
+    } else if (scene.end) {
+      setTimeout(mostrarCreditos, 1500);
     }
   });
+}
+
+function mostrarCreditos() {
+  document.getElementById("game").style.display = "none";
+  credits.classList.remove("hidden");
+  bgSound.pause();
+  endSound.play();
+
+  const linhas = [
+    "Créditos Finais",
+    "Produção: Allvesz",
+    "História: Um pacto com o desconhecido",
+    "Trilha Sonora: Ecos da Mente OST",
+    "Obrigado por sobreviver... ou não.",
+    "BY ALLVESZ",
+    "Continua..."
+  ];
+
+  let index = 0;
+  function exibirLinha() {
+    if (index < linhas.length) {
+      creditLine.textContent = linhas[index];
+      creditLine.style.opacity = 1;
+      setTimeout(() => {
+        creditLine.style.opacity = 0;
+        index++;
+        setTimeout(exibirLinha, 1200);
+      }, 3500);
+    }
+  }
+
+  setTimeout(exibirLinha, 1000);
 }
 
 const scenes = [
@@ -114,7 +161,8 @@ const scenes = [
     ]
   },
   {
-    text: "A presença toma sua mente. Você não é mais você. (Final Ruim)"
+    text: "A presença toma sua mente. Você não é mais você. (Final Ruim)",
+    end: true
   },
   {
     text: "O diário revela seu passado sombrio. Mas também como sair.",
@@ -123,69 +171,8 @@ const scenes = [
     ]
   },
   {
-    text: "Você encontra uma saída escondida e escapa. Mas a criatura... segue atrás. (Final Neutro)"
-  },
-  {
-    text: "Você se esconde em um armário. A porta range sozinha e uma respiração pesada se aproxima.",
-    sanityLoss: 10,
-    choices: [
-      { text: "Segurar a respiração", next: 11 },
-      { text: "Abrir a porta e enfrentar", next: 12 }
-    ]
-  },
-  {
-    text: "Você segura o fôlego até quase desmaiar. A presença passa... por agora.",
-    choices: [
-      { text: "Sair devagar", next: 13 }
-    ]
-  },
-  {
-    text: "Você abre a porta e encara algo sem rosto. Ele grita dentro da sua mente.",
-    sanityLoss: 30,
-    choices: [
-      { text: "Cair de joelhos", next: 7 },
-      { text: "Gritar de volta", next: 14 }
-    ]
-  },
-  {
-    text: "Você volta ao corredor. Um rádio quebrado transmite uma voz que chama seu nome.",
-    sanityLoss: 5,
-    choices: [
-      { text: "Responder", next: 15 },
-      { text: "Destruir o rádio", next: 16 }
-    ]
-  },
-  {
-    text: "Seu grito ecoa e a entidade hesita. Você aproveita e corre.",
-    sanityLoss: 5,
-    choices: [
-      { text: "Seguir por onde veio", next: 3 },
-      { text: "Buscar uma nova sala", next: 5 }
-    ]
-  },
-  {
-    text: "A voz diz: 'Você está próximo'. Algo rasteja pelo teto.",
-    sanityLoss: 20,
-    choices: [
-      { text: "Olhar para cima", next: 17 },
-      { text: "Ignorar e fugir", next: 2 }
-    ]
-  },
-  {
-    text: "Você destrói o rádio. Um grito agudo preenche o ambiente. Algo foi libertado.",
-    sanityLoss: 15,
-    choices: [
-      { text: "Se esconder", next: 10 },
-      { text: "Buscar o diário", next: 5 }
-    ]
-  },
-  {
-    text: "Acima de você, olhos brilhantes observam. Eles piscam em sincronia com seu coração.",
-    sanityLoss: 25,
-    choices: [
-      { text: "Ficar parado", next: 7 },
-      { text: "Correr", next: 2 }
-    ]
+    text: "Você encontra uma saída escondida e escapa. Mas a criatura... segue atrás. (Final Neutro)",
+    end: true
   }
 ];
 
