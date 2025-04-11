@@ -4,6 +4,7 @@ const sanityEl = document.getElementById("sanity");
 const inventoryEl = document.getElementById("inventory");
 const bgSound = document.getElementById("bg-sound");
 const jumpscare = document.getElementById("jumpscare");
+const scareImg = document.getElementById("scare-img");
 const scream = document.getElementById("scream");
 
 let sanity = 100;
@@ -24,6 +25,10 @@ function typeText(text, callback, i = 0) {
 }
 
 function triggerJumpscare() {
+  const images = ["jump1.png", "jump2.png", "jump3.png"];
+  const selected = images[Math.floor(Math.random() * images.length)];
+  scareImg.src = selected;
+  scream.currentTime = 0;
   scream.play();
   jumpscare.style.display = "flex";
   setTimeout(() => {
@@ -85,45 +90,59 @@ const scenes = [
   },
   {
     text: "Nada está atrás. Mas agora o espelho mostra algo de pé no corredor.",
+    sanityLoss: 10,
+    choices: [
+      { text: "Sair correndo", next: 2 },
+      { text: "Encarar o espelho", next: 6 }
+    ]
+  },
+  {
+    text: "Uma sombra atravessa você, e você sente a sanidade se esvair.",
     sanityLoss: 20,
     choices: [
-      { text: "Fechar os olhos", next: 2 }
+      { text: "Gritar", next: 7 },
+      { text: "Ficar em silêncio", next: 5 }
     ]
   },
   {
-    text: "Os sussurros gritam. Você sente algo entrar na sua mente.",
+    text: "Você encontra uma lanterna velha. Pode ser útil.",
+    item: "Lanterna",
+    choices: [
+      { text: "Pegar a lanterna e continuar", next: 8 }
+    ]
+  },
+  {
+    text: "O espelho trinca mais uma vez e se estilhaça com um grito.",
     sanityLoss: 25,
     choices: [
-      { text: "Resistir", next: 6 },
-      { text: "Aceitar a presença", next: 7 }
+      { text: "Fugir", next: 2 }
     ]
   },
   {
-    text: "Uma sala com velas. Um diário aberto diz: 'A criatura espelha sua culpa'.",
-    item: "Diário",
+    text: "Seu grito ecoa, mas ninguém responde. Algo se aproxima...",
+    sanityLoss: 20,
     choices: [
-      { text: "Ler o diário", next: 8 },
-      { text: "Levar e sair", next: 2 }
+      { text: "Se esconder", next: 5 }
     ]
   },
   {
-    text: "Você vence o controle mental, mas perde memórias no processo.",
+    text: "Com a lanterna, você vê marcas de unhas nas paredes e algo escrito com sangue: \"Não olhe para trás\"...",
     sanityLoss: 15,
     choices: [
-      { text: "Voltar ao espelho", next: 3 }
+      { text: "Olhar para trás", next: 6 },
+      { text: "Correr em frente", next: 9 }
     ]
   },
   {
-    text: "A presença toma sua mente. Você não é mais você. (Final Ruim)"
-  },
-  {
-    text: "O diário revela seu passado sombrio. Mas também como sair.",
+    text: "Uma porta iluminada aparece. Você está quase livre... ou não.",
+    sanityLoss: 5,
     choices: [
-      { text: "Seguir as instruções", next: 9 }
+      { text: "Abrir a porta", next: 10 }
     ]
   },
   {
-    text: "Você encontra uma saída escondida e escapa. Mas a criatura... segue atrás. (Final Neutro)"
+    text: "Fim da demo. Obrigado por jogar 'Ecos da Mente'.",
+    choices: []
   }
 ];
 
