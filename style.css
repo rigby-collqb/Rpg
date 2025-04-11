@@ -1,0 +1,36 @@
+body {
+  background-color: black;
+  color: red;
+  font-family: 'Courier New', Courier, monospace;
+  text-align: center;
+  margin-top: 20%;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+
+#title {
+  font-size: 2em;
+  animation: flicker 2s infinite;
+}
+
+button {
+  background-color: darkred;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
