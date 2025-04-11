@@ -4,7 +4,6 @@ const sanityEl = document.getElementById("sanity");
 const inventoryEl = document.getElementById("inventory");
 const bgSound = document.getElementById("bg-sound");
 const jumpscare = document.getElementById("jumpscare");
-const scareImg = document.getElementById("scare-img");
 const scream = document.getElementById("scream");
 
 let sanity = 100;
@@ -25,10 +24,6 @@ function typeText(text, callback, i = 0) {
 }
 
 function triggerJumpscare() {
-  const images = ["jump1.png", "jump2.png", "jump3.png"];
-  const selected = images[Math.floor(Math.random() * images.length)];
-  scareImg.src = selected;
-  scream.currentTime = 0;
   scream.play();
   jumpscare.style.display = "flex";
   setTimeout(() => {
@@ -90,59 +85,107 @@ const scenes = [
   },
   {
     text: "Nada está atrás. Mas agora o espelho mostra algo de pé no corredor.",
-    sanityLoss: 10,
-    choices: [
-      { text: "Sair correndo", next: 2 },
-      { text: "Encarar o espelho", next: 6 }
-    ]
-  },
-  {
-    text: "Uma sombra atravessa você, e você sente a sanidade se esvair.",
     sanityLoss: 20,
     choices: [
-      { text: "Gritar", next: 7 },
-      { text: "Ficar em silêncio", next: 5 }
+      { text: "Fechar os olhos", next: 2 }
     ]
   },
   {
-    text: "Você encontra uma lanterna velha. Pode ser útil.",
-    item: "Lanterna",
-    choices: [
-      { text: "Pegar a lanterna e continuar", next: 8 }
-    ]
-  },
-  {
-    text: "O espelho trinca mais uma vez e se estilhaça com um grito.",
+    text: "Os sussurros gritam. Você sente algo entrar na sua mente.",
     sanityLoss: 25,
     choices: [
-      { text: "Fugir", next: 2 }
+      { text: "Resistir", next: 6 },
+      { text: "Aceitar a presença", next: 7 }
     ]
   },
   {
-    text: "Seu grito ecoa, mas ninguém responde. Algo se aproxima...",
-    sanityLoss: 20,
+    text: "Uma sala com velas. Um diário aberto diz: 'A criatura espelha sua culpa'.",
+    item: "Diário",
     choices: [
-      { text: "Se esconder", next: 5 }
+      { text: "Ler o diário", next: 8 },
+      { text: "Levar e sair", next: 2 }
     ]
   },
   {
-    text: "Com a lanterna, você vê marcas de unhas nas paredes e algo escrito com sangue: \"Não olhe para trás\"...",
+    text: "Você vence o controle mental, mas perde memórias no processo.",
     sanityLoss: 15,
     choices: [
-      { text: "Olhar para trás", next: 6 },
-      { text: "Correr em frente", next: 9 }
+      { text: "Voltar ao espelho", next: 3 }
     ]
   },
   {
-    text: "Uma porta iluminada aparece. Você está quase livre... ou não.",
+    text: "A presença toma sua mente. Você não é mais você. (Final Ruim)"
+  },
+  {
+    text: "O diário revela seu passado sombrio. Mas também como sair.",
+    choices: [
+      { text: "Seguir as instruções", next: 9 }
+    ]
+  },
+  {
+    text: "Você encontra uma saída escondida e escapa. Mas a criatura... segue atrás. (Final Neutro)"
+  },
+  {
+    text: "Você se esconde em um armário. A porta range sozinha e uma respiração pesada se aproxima.",
+    sanityLoss: 10,
+    choices: [
+      { text: "Segurar a respiração", next: 11 },
+      { text: "Abrir a porta e enfrentar", next: 12 }
+    ]
+  },
+  {
+    text: "Você segura o fôlego até quase desmaiar. A presença passa... por agora.",
+    choices: [
+      { text: "Sair devagar", next: 13 }
+    ]
+  },
+  {
+    text: "Você abre a porta e encara algo sem rosto. Ele grita dentro da sua mente.",
+    sanityLoss: 30,
+    choices: [
+      { text: "Cair de joelhos", next: 7 },
+      { text: "Gritar de volta", next: 14 }
+    ]
+  },
+  {
+    text: "Você volta ao corredor. Um rádio quebrado transmite uma voz que chama seu nome.",
     sanityLoss: 5,
     choices: [
-      { text: "Abrir a porta", next: 10 }
+      { text: "Responder", next: 15 },
+      { text: "Destruir o rádio", next: 16 }
     ]
   },
   {
-    text: "Fim da demo. Obrigado por jogar 'Ecos da Mente'.",
-    choices: []
+    text: "Seu grito ecoa e a entidade hesita. Você aproveita e corre.",
+    sanityLoss: 5,
+    choices: [
+      { text: "Seguir por onde veio", next: 3 },
+      { text: "Buscar uma nova sala", next: 5 }
+    ]
+  },
+  {
+    text: "A voz diz: 'Você está próximo'. Algo rasteja pelo teto.",
+    sanityLoss: 20,
+    choices: [
+      { text: "Olhar para cima", next: 17 },
+      { text: "Ignorar e fugir", next: 2 }
+    ]
+  },
+  {
+    text: "Você destrói o rádio. Um grito agudo preenche o ambiente. Algo foi libertado.",
+    sanityLoss: 15,
+    choices: [
+      { text: "Se esconder", next: 10 },
+      { text: "Buscar o diário", next: 5 }
+    ]
+  },
+  {
+    text: "Acima de você, olhos brilhantes observam. Eles piscam em sincronia com seu coração.",
+    sanityLoss: 25,
+    choices: [
+      { text: "Ficar parado", next: 7 },
+      { text: "Correr", next: 2 }
+    ]
   }
 ];
 
