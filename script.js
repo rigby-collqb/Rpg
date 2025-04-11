@@ -3,136 +3,15 @@ const choicesEl = document.getElementById("choices");
 const sanityEl = document.getElementById("sanity");
 const inventoryEl = document.getElementById("inventory");
 const bgSound = document.getElementById("bg-sound");
+const jumpscare = document.getElementById("jumpscare");
+const scream = document.getElementById("scream");
 
 let sanity = 100;
 let inventory = [];
-let currentScene = 0;
 
-const scenes = [
-  {
-    text: "Você acorda em um quarto escuro. A luz falha. Um som de respiração ecoa.",
-    choices: [
-      { text: "Levantar e explorar", next: 1 },
-      { text: "Ficar deitado e ouvir", next: 2 }
-    ]
-  },
-  {
-    text: "Você tateia até a porta. Está entreaberta. Um cheiro de mofo e sangue vem de fora.",
-    choices: [
-      { text: "Abrir a porta", next: 3 },
-      { text: "Procurar algo útil no quarto", next: 4 }
-    ]
-  },
-  {
-    text: "A respiração se aproxima. Você sente uma presença. Sua sanidade diminui.",
-    sanityLoss: 10,
-    choices: [
-      { text: "Gritar por ajuda", next: 5 },
-      { text: "Fechar os olhos", next: 6 }
-    ]
-  },
-  {
-    text: "O corredor é longo. As luzes piscam. Você ouve sussurros...",
-    sanityLoss: 5,
-    choices: [
-      { text: "Seguir os sussurros", next: 7 },
-      { text: "Voltar pro quarto", next: 4 }
-    ]
-  },
-  {
-    text: "Você encontra uma lanterna quebrada. Talvez funcione...",
-    item: "Lanterna",
-    choices: [
-      { text: "Levar a lanterna", next: 3 },
-      { text: "Deixar e sair", next: 3 }
-    ]
-  },
-  {
-    text: "Nada responde. Mas agora a respiração está dentro da sua mente.",
-    sanityLoss: 15,
-    choices: [
-      { text: "Levantar e correr", next: 3 }
-    ]
-  },
-  {
-    text: "Você desmaia. Quando acorda, algo mudou...",
-    sanityLoss: 20,
-    choices: [
-      { text: "Explorar", next: 3 }
-    ]
-  },
-  {
-    text: "Os sussurros dizem seu nome. Você não se lembra quem é.",
-    sanityLoss: 10,
-    choices: [
-      { text: "Perguntar quem sou", next: 8 },
-      { text: "Fingir que sabe", next: 9 }
-    ]
-  },
-  {
-    text: "\"Sou você\" diz a voz. Você sente sua sanidade ruir.",
-    sanityLoss: 20,
-    choices: [
-      { text: "Correr", next: 10 }
-    ]
-  },
-  {
-    text: "Você anda como se tudo estivesse normal... Mas nada está.",
-    choices: [
-      { text: "Olhar no espelho", next: 11 }
-    ]
-  },
-  {
-    text: "Corredores sem fim. Portas que levam ao mesmo lugar.",
-    sanityLoss: 10,
-    choices: [
-      { text: "Parar de correr", next: 12 }
-    ]
-  },
-  {
-    text: "Você não tem reflexo. Algo tomou seu lugar.",
-    sanityLoss: 25,
-    choices: [
-      { text: "Aceitar", next: 13 },
-      { text: "Rejeitar", next: 14 }
-    ]
-  },
-  {
-    text: "Você senta. Escuro. Silêncio. Está sozinho, pra sempre. (Final: Neutro)"
-  },
-  {
-    text: "Você se funde com a presença. Agora ela é você. (Final: Ruim)"
-  },
-  {
-    text: "Você recusa a loucura. Lembra de quem é. Escapa. (Final: Bom)"
-  }
-];
-
-function startGame() {
-  bgSound.play();
-  showScene(0);
-}
-
-function showScene(index) {
-  const scene = scenes[index];
-  currentScene = index;
-  textEl.innerHTML = "";
-  choicesEl.innerHTML = "";
-  if (scene.sanityLoss) sanity = Math.max(0, sanity - scene.sanityLoss);
-  if (scene.item && !inventory.includes(scene.item)) inventory.push(scene.item);
+function updateStatus() {
   sanityEl.textContent = `Sanidade: ${sanity}%`;
   inventoryEl.textContent = `Inventário: ${inventory.join(", ") || "Nenhum"}`;
-
-  typeText(scene.text, () => {
-    if (scene.choices) {
-      scene.choices.forEach(choice => {
-        const btn = document.createElement("button");
-        btn.textContent = choice.text;
-        btn.onclick = () => showScene(choice.next);
-        choicesEl.appendChild(btn);
-      });
-    }
-  });
 }
 
 function typeText(text, callback, i = 0) {
@@ -144,4 +23,108 @@ function typeText(text, callback, i = 0) {
   }
 }
 
-startGame();
+function triggerJumpscare() {
+  scream.play();
+  jumpscare.style.display = "flex";
+  setTimeout(() => {
+    jumpscare.style.display = "none";
+  }, 1500);
+}
+
+function showScene(scene) {
+  textEl.innerHTML = "";
+  choicesEl.innerHTML = "";
+
+  if (scene.sanityLoss) {
+    sanity = Math.max(0, sanity - scene.sanityLoss);
+    if (sanity <= 30 && Math.random() < 0.3) {
+      triggerJumpscare();
+    }
+  }
+
+  if (scene.item && !inventory.includes(scene.item)) {
+    inventory.push(scene.item);
+  }
+
+  updateStatus();
+  typeText(scene.text, () => {
+    if (scene.choices) {
+      scene.choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.textContent = choice.text;
+        btn.onclick = () => showScene(scenes[choice.next]);
+        choicesEl.appendChild(btn);
+      });
+    }
+  });
+}
+
+const scenes = [
+  {
+    text: "Você acorda em um quarto frio. Um espelho quebrado reflete olhos que não são seus.",
+    choices: [
+      { text: "Levantar e olhar mais de perto", next: 1 },
+      { text: "Ignorar e sair pela porta", next: 2 }
+    ]
+  },
+  {
+    text: "Ao se aproximar do espelho, uma figura se move atrás de você.",
+    sanityLoss: 15,
+    choices: [
+      { text: "Virar rápido", next: 3 },
+      { text: "Fugir imediatamente", next: 2 }
+    ]
+  },
+  {
+    text: "O corredor está escuro. Sussurros ecoam do fim do corredor.",
+    sanityLoss: 10,
+    choices: [
+      { text: "Seguir os sussurros", next: 4 },
+      { text: "Entrar na primeira porta à direita", next: 5 }
+    ]
+  },
+  {
+    text: "Nada está atrás. Mas agora o espelho mostra algo de pé no corredor.",
+    sanityLoss: 20,
+    choices: [
+      { text: "Fechar os olhos", next: 2 }
+    ]
+  },
+  {
+    text: "Os sussurros gritam. Você sente algo entrar na sua mente.",
+    sanityLoss: 25,
+    choices: [
+      { text: "Resistir", next: 6 },
+      { text: "Aceitar a presença", next: 7 }
+    ]
+  },
+  {
+    text: "Uma sala com velas. Um diário aberto diz: 'A criatura espelha sua culpa'.",
+    item: "Diário",
+    choices: [
+      { text: "Ler o diário", next: 8 },
+      { text: "Levar e sair", next: 2 }
+    ]
+  },
+  {
+    text: "Você vence o controle mental, mas perde memórias no processo.",
+    sanityLoss: 15,
+    choices: [
+      { text: "Voltar ao espelho", next: 3 }
+    ]
+  },
+  {
+    text: "A presença toma sua mente. Você não é mais você. (Final Ruim)"
+  },
+  {
+    text: "O diário revela seu passado sombrio. Mas também como sair.",
+    choices: [
+      { text: "Seguir as instruções", next: 9 }
+    ]
+  },
+  {
+    text: "Você encontra uma saída escondida e escapa. Mas a criatura... segue atrás. (Final Neutro)"
+  }
+];
+
+showScene(scenes[0]);
