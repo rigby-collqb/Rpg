@@ -4,6 +4,7 @@ body {
   font-family: 'Courier New', monospace;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 #game {
@@ -66,7 +67,51 @@ body {
   max-height: 100%;
 }
 
+#credits {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(#000, #111);
+  color: #f33;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+#credits.hidden {
+  display: none;
+}
+
+#credits-content {
+  text-align: center;
+}
+
+#credit-line {
+  font-size: 3em;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  text-shadow: 0 0 15px #f00, 0 0 30px #900;
+  animation: tremor 0.15s infinite;
+}
+
+@keyframes tremor {
+  0% { transform: translate(0px, 0px); }
+  20% { transform: translate(-1px, 1px); }
+  40% { transform: translate(1px, -1px); }
+  60% { transform: translate(-1px, -2px); }
+  80% { transform: translate(2px, 1px); }
+  100% { transform: translate(0px, 0px); }
+}
+
 @media (max-width: 600px) {
+  #credit-line {
+    font-size: 2em;
+  }
+
   #game {
     padding: 10px;
     margin: 20px 10px;
