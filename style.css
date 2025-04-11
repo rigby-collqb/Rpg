@@ -1,36 +1,58 @@
 body {
-  background-color: black;
-  color: red;
-  font-family: 'Courier New', Courier, monospace;
-  text-align: center;
-  margin-top: 20%;
+  background-color: #000;
+  color: #f33;
+  font-family: 'Courier New', monospace;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
-.container {
-  max-width: 600px;
-  margin: auto;
+#game {
+  padding: 20px;
+  max-width: 800px;
+  margin: 40px auto;
+  background: #111;
+  border-radius: 10px;
+  box-shadow: 0 0 30px #400;
+  min-height: 300px;
 }
 
-#title {
-  font-size: 2em;
-  animation: flicker 2s infinite;
+#text {
+  font-size: 1.2em;
+  line-height: 1.5em;
+  min-height: 150px;
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+  color: #eee;
+  animation: fadeIn 2s ease-in;
 }
 
-button {
-  background-color: darkred;
-  border: none;
-  color: white;
+#choices button {
+  display: block;
+  margin: 10px auto;
   padding: 10px 20px;
+  background: #800;
+  border: none;
+  color: #fff;
   font-size: 1em;
   cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+#choices button:hover {
+  background: #a00;
+}
+
+#status {
   margin-top: 20px;
+  font-size: 0.9em;
+  color: #ccc;
+  display: flex;
+  justify-content: space-between;
 }
 
-.hidden {
-  display: none;
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
